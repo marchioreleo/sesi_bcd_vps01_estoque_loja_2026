@@ -2,8 +2,6 @@
 
 ## MER Conceitual
 
-O modelo lógico apresenta as tabelas, atributos, chaves primárias (PK) e chaves estrangeiras (FK).
-
 ![MER](../sesi_bcd_vps01_estoque_loja_2026/mer_estoque.png)
 
 ---

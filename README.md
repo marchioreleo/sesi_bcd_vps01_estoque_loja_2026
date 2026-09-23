@@ -1,41 +1,14 @@
 # SESI BCD VPS01 — Estoque de uma Loja
 
-## 📦 Tema: Estoque de uma Loja
-
-Este projeto apresenta um banco de dados para gerenciamento do estoque de uma loja de roupas.
-
-O sistema permite controlar produtos, categorias, fornecedores, quantidade disponível em estoque e movimentações de entrada e saída de mercadorias.
-
-O banco de dados foi desenvolvido utilizando **MySQL**, com o uso de chaves primárias e estrangeiras para estabelecer os relacionamentos entre as entidades.
-
----
-
-## 🧩 MER/DER Conceitual
-
-O modelo conceitual representa as principais entidades do sistema, seus atributos, relacionamentos e cardinalidades.
-
-![MER/DER Conceitual](MER_DER_Conceitual.png)
-
-### Relacionamentos
-
-- **Fornecedor 1:N Produto** — um fornecedor pode fornecer vários produtos.
-- **Categoria 1:N Produto** — uma categoria pode classificar vários produtos.
-- **Produto 1:N Estoque** — conforme o DDL atual, um produto pode estar associado a vários registros de estoque.
-- **Produto 1:N Movimentação** — um produto pode possuir várias movimentações de estoque.
-
-> No MER conceitual, as chaves estrangeiras não são representadas como atributos, pois os relacionamentos representam essas associações.
-
----
-
-## 🗃️ MER/DER Lógico
+## MER Conceitual
 
 O modelo lógico apresenta as tabelas, atributos, chaves primárias (PK) e chaves estrangeiras (FK).
 
-![MER/DER Lógico](MER_DER_Logico.png)
+![MER](../sesi_bcd_vps01_estoque_loja_2026/mer_estoque.png)
 
 ---
 
-# 📖 Dicionário de Dados
+# Dicionário de Dados
 
 | **Entidade** | **Atributo** | **Tipo** | **Tamanho** | **Descrição** |
 |---|---|---|---|---|
@@ -69,9 +42,7 @@ O modelo lógico apresenta as tabelas, atributos, chaves primárias (PK) e chave
 
 ---
 
-# 📊 Dados de Teste
-
-Os dados de teste estão disponíveis em arquivos CSV correspondentes às tabelas do banco:
+# Dados de teste em csv
 
 - [📄 categoria.csv](categoria.csv)
 - [📄 fornecedor.csv](fornecedor.csv)
@@ -81,213 +52,96 @@ Os dados de teste estão disponíveis em arquivos CSV correspondentes às tabela
 
 ---
 
-# 🛠️ DDL — Criação do Banco de Dados
-
-O DDL é responsável pela criação do banco de dados, das tabelas, das chaves primárias e dos relacionamentos.
+# Script SQL DDL
 
 ```sql
-DROP DATABASE IF EXISTS estoque;
+drop database if exists estoque;
 
-CREATE DATABASE estoque;
+create database estoque;
 
-USE estoque;
+use estoque;
 
-CREATE TABLE categoria(
-    id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    nome VARCHAR(100) NOT NULL,
-    descricao TEXT
+create table categoria(
+    id int primary key auto_increment not null,
+    nome varchar(100) not null,
+    descricao text
 );
 
-CREATE TABLE fornecedor(
-    id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    razao_social VARCHAR(50) NOT NULL,
-    nome_fantasia VARCHAR(50) NOT NULL,
-    cnpj VARCHAR(20) NOT NULL,
-    telefone VARCHAR(16) NOT NULL,
-    email VARCHAR(50) NOT NULL,
-    endereco VARCHAR(100) NOT NULL
+create table fornecedor(
+    id int primary key auto_increment not null,
+    razao_social varchar(50) not null,
+    nome_fantasia varchar(50) not null,
+    cnpj varchar(20) not null,
+    telefone varchar(16) not null,
+    email varchar(50) not null,
+    endereco varchar(100) not null
 );
 
-CREATE TABLE produto(
-    id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    nome VARCHAR(100) NOT NULL,
-    descricao VARCHAR(200),
-    preco DECIMAL(10,2) NOT NULL,
-    marca VARCHAR(50) NOT NULL,
-    id_categoria INT NOT NULL,
-    id_fornecedor INT NOT NULL
+create table produto(
+    id int primary key auto_increment not null,
+    nome varchar(100) not null,
+    descricao varchar(200),
+    preco decimal(10,2) not null,
+    marca varchar(50) not null,
+    id_categoria int not null,
+    id_fornecedor int not null
 );
 
-CREATE TABLE estoque(
-    id_estoque INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    id_produto INT NOT NULL,
-    quantidade INT NOT NULL,
-    quantidade_minima INT NOT NULL,
-    localizacao VARCHAR(50) NOT NULL
+create table estoque(
+    id_estoque int primary key auto_increment not null,
+    id_produto int not null,
+    quantidade int not null,
+    quantidade_minima int not null,
+    localizacao varchar(50) not null
 );
 
-CREATE TABLE movimentacao(
-    id_movimentacao INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    id_produto INT NOT NULL,
-    tipo ENUM('ENTRADA', 'SAIDA') NOT NULL,
-    quantidade INT NOT NULL,
-    data DATETIME NOT NULL DEFAULT(CURTIME())
+create table movimentacao(
+    id_movimentacao int primary key auto_increment not null,
+    id_produto int not null,
+    tipo enum('ENTRADA', 'SAIDA') not null,
+    quantidade int not null,
+    data datetime not null default(curtime())
 );
 
-ALTER TABLE produto
-ADD CONSTRAINT fk_categoria
-FOREIGN KEY (id_categoria) REFERENCES categoria(id);
+alter table produto add constraint fk_categoria foreign key (id_categoria) references categoria(id);
 
-ALTER TABLE produto
-ADD CONSTRAINT fk_fornecedor
-FOREIGN KEY (id_fornecedor) REFERENCES fornecedor(id);
+alter table produto add constraint fk_fornecedor foreign key (id_fornecedor) references fornecedor(id);
 
-ALTER TABLE estoque
-ADD CONSTRAINT fk_estoque_produto
-FOREIGN KEY (id_produto) REFERENCES produto(id);
+alter table estoque add constraint fk_estoque_produto foreign key (id_produto) references produto(id);
 
-ALTER TABLE movimentacao
-ADD CONSTRAINT fk_movimentacao_produto
-FOREIGN KEY (id_produto) REFERENCES produto(id);
+alter table movimentacao add constraint fk_movimentacao_produto foreign key (id_produto) references produto(id);
 ```
 
 ---
 
-# 📝 DML — População do Banco de Dados
-
-O DML insere os dados de teste nas tabelas do banco.
+# Script SQL DML
 
 ```sql
-USE estoque;
+use estoque;
 
-INSERT INTO categoria(nome, descricao) VALUES
-('Upper body', 'Components of the upper part of an armour'),
-('Central piece', 'Components of the central part of an armour'),
-('Lower body', 'Components of the lower part of an armour');
+insert into categoria(nome, descricao) values
+("Upper body", "Components of the upper part of an armour"),
+("Central piece", "Components of the central part of an armour"),
+("Lower body", "Components of the lower part of an armour");
 
-INSERT INTO fornecedor(
-    razao_social,
-    nome_fantasia,
-    cnpj,
-    telefone,
-    email,
-    endereco
-) VALUES
-(
-    'Giovanni''s.ltd',
-    'Giovanni''s smithy',
-    '53.673,123/0001-10',
-    '(39)12942-1583',
-    'giovannismithy@email.com',
-    'Passo dello Stelvio - 1'
-),
-(
-    'Mario''s.ltd',
-    'Mario''s little forge',
-    '34.145.102/0001-99',
-    '(39)81924-1567',
-    'mariolittleforge@email.com',
-    'Grande Strada delle Dolomiti - 67'
-),
-(
-    'Luigi''s.ltd',
-    'Luigi''s shop',
-    '42.783.567/0001-45',
-    '(39)44128-1532',
-    'luigishop@email.com',
-    'Strada della Forra - 30'
-);
+insert into fornecedor(razao_social, nome_fantasia, cnpj, telefone, email, endereco) values
+("Giovanni's.ltd", "Giovanni's smithy", "53.673,123/0001-10", "(39)12942-1583", "giovannismithy@email.com", "Passo dello Stelvio - 1"),
+("Mario's.ltd", "Mario's little forge", "34.145.102/0001-99", "(39)81924-1567", "mariolittleforge@email.com", "Grande Strada delle Dolomiti - 67"),
+("Luigi's.ltd", "Luigi's shop", "42.783.567/0001-45", "(39)44128-1532", "luigishop@email.com", "Strada della Forra - 30");
 
-INSERT INTO produto(
-    nome,
-    descricao,
-    preco,
-    marca,
-    id_categoria,
-    id_fornecedor
-) VALUES
-(
-    'Sallet',
-    'Italian 15th-century helmet',
-    2000.00,
-    'Giovanni''s smithy',
-    1,
-    1
-),
-(
-    'Cuirass',
-    'Italian 15th-century main chest armour',
-    4000.00,
-    'Mario''s little forge',
-    2,
-    2
-),
-(
-    'Sabaton',
-    'Italian 15th-century armoured boots',
-    1200.00,
-    'Luigi''s shop',
-    3,
-    3
-);
+insert into produto(nome, descricao, preco, marca, id_categoria, id_fornecedor) values
+("Sallet", "Italian 15th-century helmet", 2000, "Giovanni's smithy", 1, 1),
+("Cuirass", "Italian 15th-century main chest armour", 4000, "Mario's little forge", 1, 2),
+("Sabaton", "Italian 15th-century armoured boots", 1200, "Luigi's shop", 3, 3);
 
-INSERT INTO estoque(
-    id_produto,
-    quantidade,
-    quantidade_minima,
-    localizacao
-) VALUES
-(1, 15, 1, 'Lombardia'),
-(2, 7, 1, 'Veneto'),
-(3, 20, 1, 'Lombardia');
+insert into estoque(id_estoque, id_produto, quantidade, quantidade_minima, localizacao) values
+(1, 1, 15, 1, "Lombardia"),
+(2, 2, 7, 1, "Veneto"),
+(3, 3, 20, 1, "Lombardia");
 
-INSERT INTO movimentacao(
-    id_produto,
-    tipo,
-    quantidade,
-    data
-) VALUES
-(1, 'ENTRADA', 4, CURDATE()),
-(2, 'SAIDA', 3, CURDATE()),
-(3, 'SAIDA', 6, CURDATE());
+insert into movimentacao(id_movimentacao, id_produto, tipo, quantidade) values
+(1, 1, "ENTRADA", 4),
+(2, 2, "SAIDA", 3),
+(3, 3, "SAIDA", 6);
+
 ```
-
----
-
-# 💻 Tecnologias Utilizadas
-
-- **MySQL** — criação e gerenciamento do banco de dados.
-- **Draw.io / diagrams.net** — criação dos modelos MER/DER.
-- **CSV** — armazenamento dos dados de teste.
-- **GitHub** — versionamento e entrega do projeto.
-
----
-
-# 📁 Estrutura do Repositório
-
-```text
-sesi_bcd_vps01_tema_2026/
-│
-├── README.md
-├── ddl.sql
-├── dml.sql
-│
-├── MER_DER_Conceitual.png
-├── MER_DER_Logico.png
-│
-├── categoria.csv
-├── fornecedor.csv
-├── produto.csv
-├── estoque.csv
-└── movimentacao.csv
-```
-
----
-
-# 📌 Nome do Repositório
-
-```text
-sesi_bcd_vps01_tema_2026
-```
-
-Projeto desenvolvido para o desafio **Tema 02 — Estoque de uma Loja**.

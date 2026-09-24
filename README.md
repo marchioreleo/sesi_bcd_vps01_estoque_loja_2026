@@ -1,10 +1,10 @@
 # SESI BCD VPS01 — Estoque de uma Loja
 
-## MER Conceitual
+## MER DER Conceitual
 
 ![MER](MER.png)
 
-## DER Conceitual
+## MER DER Conceitual
 
 ![DER](DER.png)
 

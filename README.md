@@ -2,11 +2,12 @@
 
 ## MER Conceitual
 
-![MER](../sesi_bcd_vps01_estoque_loja_2026/MER.png)
+![MER](MER.png)
 
 ## DER Conceitual
 
-![DER](../sesi_bcd_vps01_estoque_loja_2026/DER.png)
+![DER](DER.png)
+
 ---
 
 # Dicionário de Dados
